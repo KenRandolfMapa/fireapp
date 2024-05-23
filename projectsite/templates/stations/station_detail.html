@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Station Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">{{ station.name }}</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Address:</strong> {{ station.address }}</p>
+                    <p><strong>City:</strong> {{ station.city }}</p>
+                    <p><strong>Country:</strong> {{ station.country }}</p>
+                    <p><strong>Latitude:</strong> {{ station.latitude }}</p>
+                    <p><strong>Longitude:</strong> {{ station.longitude }}</p>
+                    <a href="{% url 'station-update' station.id %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'station-delete' station.id %}" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'station-list' %}" class="btn btn-secondary">Back to list</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

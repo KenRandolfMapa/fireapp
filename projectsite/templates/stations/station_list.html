@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Fire Stations{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+    <div class="page-header mb-4 d-flex justify-content-between align-items-center">
+        <h4 class="page-title">Fire Stations</h4>
+        <a href="{% url 'station-create' %}" class="btn btn-primary">Create New Station</a>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">List of Fire Stations</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for station in stations %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>
+                                <a href="{% url 'station-detail' station.id %}" class="text-decoration-none">{{ station.name }}</a>
+                            </span>
+                            <span>
+                                <a href="{% url 'station-update' station.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <a href="{% url 'station-delete' station.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

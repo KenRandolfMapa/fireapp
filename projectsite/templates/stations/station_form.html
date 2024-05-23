@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ form.instance.id|yesno:"Edit Station,Create New Station" }}{% endblock %}
+
+{% block content %}
+<div class="page-inner">
+  <div class="page-header">
+    <h4 class="page-title">{{ form.instance.id|yesno:"Edit Station,Create New Station" }}</h4>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-transparent">
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'station-list' %}" class="btn btn-secondary">Back to list</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

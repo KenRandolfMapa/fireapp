@@ -2,6 +2,8 @@ from django.forms import CharField
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from fire.models import Locations, Incident, FireStation
+from .forms import FireStationForm
+
 
 from django.db import connection
 from django.http import JsonResponse
@@ -222,5 +224,42 @@ def fire_incidents_map(request):
 
     return render(request, 'fire_incidents_map.html', context)
 
+#fire station crud
+
+def station_list(request):
+    stations = FireStation.objects.all()
+    return render(request, 'stations/station_list.html', {'stations': stations})
+
+def station_create(request):
+    if request.method == 'POST':
+        form = FireStationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('station-list')
+    else:
+        form = FireStationForm()
+    return render(request, 'stations/station_form.html', {'form': form})
+
+def station_detail(request, id):
+    station = get_object_or_404(FireStation, id=id)
+    return render(request, 'stations/station_detail.html', {'station': station})
+
+def station_update(request, id):
+    station = get_object_or_404(FireStation, id=id)
+    if request.method == 'POST':
+        form = FireStationForm(request.POST, instance=station)
+        if form.is_valid():
+            form.save()
+            return redirect('station-list')
+    else:
+        form = FireStationForm(instance=station)
+    return render(request, 'stations/station_form.html', {'form': form})
+
+def station_delete(request, id):
+    station = get_object_or_404(FireStation, id=id)
+    if request.method == 'POST':
+        station.delete()
+        return redirect('station-list')
+    return render(request, 'stations/station_confirm_delete.html', {'station': station})
 
 
