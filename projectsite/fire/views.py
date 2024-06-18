@@ -2,8 +2,10 @@ from django.forms import CharField
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from fire.models import Locations, Incident, FireStation
-from .forms import FireStationForm
+from .forms import FireStationForm, IncidentForm
 
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 from django.db import connection
 from django.http import JsonResponse
@@ -17,18 +19,6 @@ class HomePageView(ListView):
     model = Locations
     context_object_name = 'home'
     template_name = "home.html"
-
-
-def delete_location(request, location_id):
-    # Fetch the location object
-    location = get_object_or_404(Locations, id=location_id)
-    
-    if request.method == 'POST':
-        # If form is submitted, delete the location
-        location.delete()
-        return redirect('database')  # Redirect to database page after deletion
-    
-    return render(request, 'del_location.html', {'location': location})
 
 
 class ChartView(ListView):
@@ -262,4 +252,77 @@ def station_delete(request, id):
         return redirect('station-list')
     return render(request, 'stations/station_confirm_delete.html', {'station': station})
 
+def location_view(request):
+    # Querying all locations and incidents from the database
+    locations = Locations.objects.all()
+    incidents = Incident.objects.all()
+    
+    # Passing data to the template for rendering
+    context = {
+        'locations': locations,
+        'incidents': incidents,
+    }
+    return render(request, 'location.html', context)
 
+def delete_location(request, location_id):
+    # Fetch the location object
+    location = get_object_or_404(Locations, id=location_id)
+    
+    if request.method == 'POST':
+        # If form is submitted, delete the location
+        location.delete()
+        return redirect('database')  # Redirect to database page after deletion
+    
+    return render(request, 'del_location.html', {'location': location})
+
+class IncidentList(ListView):
+    model = Incident
+    context_object_name = 'incident'
+    template_name = 'incident/incident_list.html'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(IncidentList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") != None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(name__icontains=query) |
+                        Q (address__icontains=query) |
+                        Q (city__icontains=query) |
+                        Q (country__icontains=query))
+        return qs
+
+class IncidentCreateView(CreateView):
+    model = Incident
+    form_class = IncidentForm
+    template_name = 'incident/incident_add.html'
+    success_url = reverse_lazy('incident-list')
+
+class IncidentUpdateView(UpdateView):
+    model = Incident
+    form_class = IncidentForm
+    template_name = 'incident/incident_edit.html'
+    success_url = reverse_lazy('incident-list')
+
+class IncidentDeleteView(DeleteView):
+    model = Incident
+    form_class = IncidentForm
+    template_name = 'incident/incident_del.html'
+    success_url = reverse_lazy('incident-list')
+
+class LocationsList(ListView):
+    model = Locations
+    template_name = 'location/locations_list.html'
+    context_object_name = 'locations'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(LocationsList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(
+                Q(name__icontains=query) |
+                Q(address__icontains=query) |
+                Q(city__icontains=query) |
+                Q(country__icontains=query)
+            )
+        return qs
