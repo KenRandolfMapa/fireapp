@@ -1,8 +1,8 @@
 from django.forms import CharField
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
-from fire.models import Locations, Incident, FireStation
-from .forms import FireStationForm, IncidentForm
+from fire.models import Locations, Incident, FireStation, Firefighters
+from .forms import FireStationForm, IncidentForm, FirefightersForm
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -326,3 +326,38 @@ class LocationsList(ListView):
                 Q(country__icontains=query)
             )
         return qs
+
+class FireFightersList(ListView):
+    model = Firefighters
+    context_object_name = 'firefighter/firefighters'
+    template_name = 'firefighter/firefighters_list.html'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(FireFightersList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(
+                Q(name__icontains(query)) |
+                Q(rank__icontains(query)) |
+                Q(experience_level__icontains(query)) |
+                Q(station__icontains(query))
+            )
+        return qs
+
+class FireFightersCreateView(CreateView):
+    model = Firefighters
+    form_class = FirefightersForm
+    template_name = 'firefighter/firefighters_add.html'
+    success_url = reverse_lazy('firefighters-list')
+
+class FireFightersUpdateView(UpdateView):
+    model = Firefighters
+    form_class = FirefightersForm
+    template_name = 'firefighter/firefighters_edit.html'
+    success_url = reverse_lazy('firefighters-list')
+
+class FireFightersDeleteView(DeleteView):
+    model = Firefighters
+    template_name = 'firefighter/firefighters_del.html'
+    success_url = reverse_lazy('firefighters-list')

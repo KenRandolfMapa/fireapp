@@ -7,17 +7,17 @@
 {% block content %}
 <div class="page-inner">
   <div class="page-header">
-    <h4 class="page-title">Delete Incident</h4>
+    <h4 class="page-title">Remove Fire Fighter</h4>
   </div>
   <div class="row">
     <div class="col-md-12">
       <div class="card card-transparent">
         <div class="card-body">
-          <h2>Are you sure you want to delete "{{ object.location }}"?</h2>
+          <h2>Are you sure you want to remove named "{{ object.name }}"?</h2>
           <form method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Yes, delete</button>
-            <a href="{% url 'incident-list' %}" class="btn btn-secondary">Cancel</a>
+            <a href="{% url 'firefighters-list' %}" class="btn btn-secondary">Cancel</a>
           </form>
         </div>
       </div>

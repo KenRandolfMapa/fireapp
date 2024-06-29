@@ -5,6 +5,7 @@ from fire.views import HomePageView, ChartView, PieCountbySeverity, LineCountbyM
 from fire.views import map_station, fire_incidents_map, station_list, station_create, station_detail,station_update, station_delete
 from fire.views import delete_location
 from fire.views import IncidentList,IncidentCreateView, IncidentUpdateView, IncidentDeleteView
+from fire.views import FireFightersList, FireFightersCreateView, FireFightersUpdateView, FireFightersDeleteView
 from fire import views
 
 
@@ -32,6 +33,11 @@ path('incidents/', IncidentList.as_view(), name='incident-list'),
 path('incidents/add/', IncidentCreateView.as_view(), name='incident-add'),
 path('incidents/<pk>/', IncidentUpdateView.as_view(), name='incident-update'),
 path('incidents/<pk>/delete/', IncidentDeleteView.as_view(), name='incident-delete'),
+
+path('firefighters/', FireFightersList.as_view(), name='firefighters-list'),
+path('firefighters/add/', FireFightersCreateView.as_view(), name='firefighters-add'),
+path('firefighters/<pk>/', FireFightersUpdateView.as_view(), name='firefighters-update'),
+path('firefighters/<pk>/delete/', FireFightersDeleteView.as_view(), name='firefighters-delete'),
 
 
 ]
