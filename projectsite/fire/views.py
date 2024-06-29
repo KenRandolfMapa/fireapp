@@ -7,8 +7,8 @@ from django.db import connection
 from django.http import JsonResponse
 from django.db.models import Count, Q
 from datetime import datetime
-from .models import Locations, Incident, FireStation, Firefighters, FireTruck
-from .forms import FireStationForm, IncidentForm, FirefightersForm, LocationsForm, FireTruckForm
+from .models import Locations, Incident, FireStation, Firefighters, FireTruck, WeatherConditions
+from .forms import FireStationForm, IncidentForm, FirefightersForm, LocationsForm, FireTruckForm, WeatherConditionsForm
 
 # General Views
 class HomePageView(ListView):
@@ -378,3 +378,39 @@ class FireTruckDeleteView(DeleteView):
     model = FireTruck
     template_name = 'firetruck/firetruck_del.html'
     success_url = reverse_lazy('firetruck-list')
+
+class WeatherConditionsList(ListView):
+    model = WeatherConditions
+    template_name = 'weather/weather_list.html'
+    context_object_name = 'weather'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(WeatherConditionsList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(
+                Q(incident__icontains=query) |
+                Q(temperature__icontains=query) |
+                Q(humidity__icontains=query) |
+                Q(wind_speed__icontains=query) |
+                Q(weather_description__icontains=query)
+            )
+        return qs
+
+class WeatherConditionsCreateView(CreateView):
+    model = WeatherConditions
+    form_class = WeatherConditionsForm
+    template_name = 'weather/weather_add.html'
+    success_url = reverse_lazy('weather-list')
+
+class WeatherConditionsUpdateView(UpdateView):
+    model = WeatherConditions
+    form_class = WeatherConditionsForm
+    template_name = 'weather/weather_edit.html'
+    success_url = reverse_lazy('weather-list')
+
+class WeatherConditionsDeleteView(DeleteView):
+    model = WeatherConditions
+    template_name = 'weather/weather_del.html'
+    success_url = reverse_lazy('weather-list')
