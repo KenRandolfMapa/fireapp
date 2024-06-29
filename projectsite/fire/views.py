@@ -7,8 +7,8 @@ from django.db import connection
 from django.http import JsonResponse
 from django.db.models import Count, Q
 from datetime import datetime
-from .models import Locations, Incident, FireStation, Firefighters
-from .forms import FireStationForm, IncidentForm, FirefightersForm, LocationsForm
+from .models import Locations, Incident, FireStation, Firefighters, FireTruck
+from .forms import FireStationForm, IncidentForm, FirefightersForm, LocationsForm, FireTruckForm
 
 # General Views
 class HomePageView(ListView):
@@ -342,3 +342,39 @@ class FireFightersDeleteView(DeleteView):
     model = Firefighters
     template_name = 'firefighter/firefighters_del.html'
     success_url = reverse_lazy('firefighters-list')
+
+#fire truck
+class FireTruckList(ListView):
+    model = FireTruck
+    context_object_name = 'firetruck/firetrucks'
+    template_name = 'firetruck/firetruck_list.html'
+    paginate_by = 10
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(
+                Q(truck_number__icontains=query) |
+                Q(model__icontains=query) |
+                Q(capacity__icontains=query) |
+                Q(station__icontains=query)
+            )
+        return qs
+
+class FireTruckCreateView(CreateView):
+    model = FireTruck
+    form_class = FireTruckForm
+    template_name = 'firetruck/firetruck_add.html'
+    success_url = reverse_lazy('firetruck-list')
+
+class FireTruckUpdateView(UpdateView):
+    model = FireTruck
+    form_class = FireTruckForm
+    template_name = 'firetruck/firetruck_edit.html'
+    success_url = reverse_lazy('firetruck-list')
+
+class FireTruckDeleteView(DeleteView):
+    model = FireTruck
+    template_name = 'firetruck/firetruck_del.html'
+    success_url = reverse_lazy('firetruck-list')

@@ -6,6 +6,7 @@ from fire.views import map_station, fire_incidents_map, station_list, station_cr
 from fire.views import LocationsList, LocationsCreateView, LocationsUpdateView, LocationsDeleteView
 from fire.views import IncidentList,IncidentCreateView, IncidentUpdateView, IncidentDeleteView
 from fire.views import FireFightersList, FireFightersCreateView, FireFightersUpdateView, FireFightersDeleteView
+from fire.views import FireTruckList, FireTruckCreateView, FireTruckUpdateView, FireTruckDeleteView
 from fire import views
 
 
@@ -24,7 +25,7 @@ urlpatterns = [
     path('locations/add/', LocationsCreateView.as_view(), name='locations-add'),
     path('locations/<pk>/', LocationsUpdateView.as_view(), name='locations-update'),
     path('locations/<pk>/delete/', LocationsDeleteView.as_view(), name='locations-delete'),
-    
+
     path('stations/', views.station_list, name='station-list'),
     path('stations/create/', views.station_create, name='station-create'),
     path('stations/<int:id>/', views.station_detail, name='station-detail'),
@@ -40,6 +41,12 @@ urlpatterns = [
     path('firefighters/add/', FireFightersCreateView.as_view(), name='firefighters-add'),
     path('firefighters/<pk>/', FireFightersUpdateView.as_view(), name='firefighters-update'),
     path('firefighters/<pk>/delete/', FireFightersDeleteView.as_view(), name='firefighters-delete'),
+
+    path('firetrucks/', FireTruckList.as_view(), name='firetruck-list'),
+    path('firetrucks/add/', FireTruckCreateView.as_view(), name='firetruck-add'),
+    path('firetrucks/<pk>/', FireTruckUpdateView.as_view(), name='firetruck-update'),
+    path('firetrucks/<pk>/delete/', FireTruckDeleteView.as_view(), name='firetruck-delete'),
+
 
 
 ]

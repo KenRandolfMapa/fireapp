@@ -1,5 +1,5 @@
 from django import forms
-from .models import FireStation, Locations, Incident, Firefighters
+from .models import FireStation, Locations, Incident, Firefighters, FireTruck
 
 class FireStationForm(forms.ModelForm):
     class Meta:
@@ -20,3 +20,8 @@ class FirefightersForm(forms.ModelForm):
     class Meta:
         model = Firefighters
         fields = ['name', 'rank', 'experience_level', 'station']
+
+class FireTruckForm(forms.ModelForm):
+    class Meta:
+        model = FireTruck
+        fields = "__all__"
