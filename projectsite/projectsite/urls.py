@@ -28,8 +28,7 @@ urlpatterns = [
 
     path('stations/', views.station_list, name='station-list'),
     path('stations/create/', views.station_create, name='station-create'),
-    path('stations/<int:id>/', views.station_detail, name='station-detail'),
-    path('stations/<int:id>/update/', views.station_update, name='station-update'),
+    path('stations/<int:id>/update/', views.station_update, name='station-detail'),
     path('stations/<int:id>/delete/', views.station_delete, name='station-delete'),
 
     path('incidents/', IncidentList.as_view(), name='incident-list'),

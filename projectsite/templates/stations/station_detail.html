@@ -1,24 +1,28 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">station details</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Edit station details</div>
+                        <div class="card-category">Page Subtitle</div>
+                    </div>
 
-{% block title %}Station Detail{% endblock %}
-
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">{{ station.name }}</h4>
-                </div>
-                <div class="card-body">
-                    <p><strong>Address:</strong> {{ station.address }}</p>
-                    <p><strong>City:</strong> {{ station.city }}</p>
-                    <p><strong>Country:</strong> {{ station.country }}</p>
-                    <p><strong>Latitude:</strong> {{ station.latitude }}</p>
-                    <p><strong>Longitude:</strong> {{ station.longitude }}</p>
-                    <a href="{% url 'station-update' station.id %}" class="btn btn-primary">Edit</a>
-                    <a href="{% url 'station-delete' station.id %}" class="btn btn-danger">Delete</a>
-                    <a href="{% url 'station-list' %}" class="btn btn-secondary">Back to list</a>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <form class="" action="" method="post" novalidate>
+                                {% csrf_token %} {% include 'includes/form.html' %}
+                                
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-3">
+                                        <button type="submit" class="btn btn-primary btn-rounded">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
